@@ -1,18 +1,10 @@
 <?php
-	$url=$_SERVER['REQUEST_URI'];
-	if(strpos($url,"?"))
-	$url=substr($url,0,strpos($url,"?"));
-	$param=explode("/",$url);
-
-	$i=0;
-	if(isset($param[1])&&($param[1]!=""))
-	{
-   		$part=$param[1];
-	}
-	else
-	{
-		$part="main";
-		$param[1] = "main";
+	
+	function parseUrl($request_uri) {	
+		$request_uri = strpos($url,"?") ? substr($request_uri,0,strpos($request_uri,"?")) : $request_uri;
+		$param = explode("/",$request_uri);
+		$param[1] = !empty($param[1]) ? $param[1] : "main";
+		return $param;
 	}
 
 ?>

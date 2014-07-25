@@ -20,6 +20,8 @@
 	$display_page = 'index.tpl';
 
 	$hash_class = new Hash($DBH);
+	$server_uri = $_SERVER['REQUEST_URI'];
+	$param = parseUrl($server_uri);
 
 	switch($param[1])
 	{
