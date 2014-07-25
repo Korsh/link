@@ -2,9 +2,10 @@
 	define('INCLUDE_DIR', 'inc/');
 	define('LIB_DIR', 'libs/');
 	define('MODULE_DIR', 'modules/');
+	define('CLASS_DIR', 'classes/');
 	require_once(INCLUDE_DIR . 'data.php');
 	require_once(INCLUDE_DIR . 'url.php');
-
+	require_once(CLASS_DIR . 'Hash.class.php');
 
 	define('SMARTY_DIR', LIB_DIR . 'Smarty/');
 	require_once(SMARTY_DIR . 'Smarty.class.php');
@@ -17,6 +18,8 @@
 	$smarty->template_dir = SMARTY_TEMPLATE_DIR;
 	$smarty->compile_dir = SMARTY_TEMPLATE_С_DIR;
 	$display_page = 'index.tpl';
+
+	$hash_class = new Hash($DBH);
 
 	switch($param[1])
 	{
