@@ -19,8 +19,7 @@ class Hash {
 					`links`
 				WHERE `url` = :url LIMIT 1
 				;");    		
-			$get_hash_by_url->bindValue(':url', $url);
-			$get_hash_by_url->execute();
+			$get_hash_by_url->execute(array('url' => $url));
 		}		
 		catch(PDOException $e) 
 		{  
@@ -29,16 +28,22 @@ class Hash {
 		}
 		if($get_hash_by_url->rowCount() > 0)
 		{
-			$i = 0;
-			$rows = $get_hash_by_url->fetchAll();
-			foreach($rows as $row){
-				$hash_url = $row['hash_url'];		
-			}
-			return $hash_url;
+			$hash_url = $get_hash_by_url->fetch(PDO::FETCH_ASSOC);	
+			return $hash_url['hash_url'];
 		}
 		else
 		{
-			return false;
+			$flag = true;
+			$i = 0;
+			while($flag == true)
+			{
+				$hash_url = substr(md5($url.$i),0,8);
+				$flag = $this->getUrlByHash($hash);
+				$i++;
+			}
+
+			$this->saveHashUrl($hash_url, $url);
+			return $hash_url;
 		}
 	}
 
@@ -56,12 +61,10 @@ class Hash {
 				:url
 			)
 			ON DUPLICATE KEY UPDATE            
-				`url` = :url2
+				`url` = :url
 			;"); 
-			$insert_hash_url->bindValue(':url', $url);
-			$insert_hash_url->bindValue(':url2', $url);
-			$insert_hash_url->bindValue(':hash_url', $hash_url);
-			$insert_hash_url->execute();
+
+			$insert_hash_url->execute(array('url' => $url, 'hash_url' => $hash_url));
 		}
 		catch(PDOException $e) 
 		{
@@ -80,8 +83,7 @@ class Hash {
 					`links`
 				WHERE `hash_url` = :hash_url LIMIT 1
 				;");    		
-			$get_url_by_hash->bindValue(':hash_url', $hash);
-			$get_url_by_hash->execute();
+			$get_url_by_hash->execute(array('hash_url' => $hash));
 		}		
 		catch(PDOException $e) 
 		{  
@@ -90,12 +92,8 @@ class Hash {
 		}	
 		if($get_url_by_hash->rowCount() > 0)
 		{
-			$i = 0;
-			$rows = $get_url_by_hash->fetchAll();
-			foreach($rows as $row){
-				$origin_url = $row['url'];		
-			}
-			return $origin_url;
+			$origin_url = $get_url_by_hash->fetch(PDO::FETCH_ASSOC);
+			return $origin_url['url'];
 		}
 		else
 		{

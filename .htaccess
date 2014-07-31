@@ -11,3 +11,5 @@ RewriteEngine on
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d     
   RewriteRule ^(.*)$ /index.php [L]          
+
+RedirectMatch ^/([0-9a-z]+)$ /?hash=$1

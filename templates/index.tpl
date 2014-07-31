@@ -12,8 +12,11 @@
 			{if $hash_url}
 			{$origin_url}
 			<br>
-			<a href="/hash/{$hash_url}">{$smarty.server.SERVER_NAME}/hash/{$hash_url}</a>
+			<a href="/{$hash_url}">{$smarty.server.SERVER_NAME}/{$hash_url}</a>
 			{/if}
 		</div>
+		{if $error}
+		<div>{$error}</div>
+		{/if}
 	</body>
 </html>

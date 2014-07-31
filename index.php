@@ -1,7 +1,6 @@
 <?
 	define('INCLUDE_DIR', 'inc/');
 	define('LIB_DIR', 'libs/');
-	define('MODULE_DIR', 'modules/');
 	define('CLASS_DIR', 'classes/');
 	require_once(INCLUDE_DIR . 'data.php');
 	require_once(INCLUDE_DIR . 'url.php');
@@ -21,18 +20,38 @@
 
 	$hash_class = new Hash($DBH);
 	$server_uri = $_SERVER['REQUEST_URI'];
-	$param = parseUrl($server_uri);
 
-	switch($param[1])
+
+	if(!empty($_POST['short_url_form']) && !empty($_POST['url']))
 	{
-		case "hash":
-			$hash = !empty($param[2]) ? $param[2] : false;
-			require_once(MODULE_DIR.'redirect.php');	
-		default:
-			require_once(MODULE_DIR.'main.php');
-			break;
+		$url = $_POST['url'];
+		$hash_url = $hash_class->getHashByUrl($url);
+		if($hash_url)
+		{			
+			$smarty->assign("origin_url", $url);
+			$smarty->assign("hash_url", $hash_url);
+		}
+		else
+		{
+				$smarty->assign("hash_url", false);
+				$smarty->assign("error", "We can`t find that url");
+		} 
 	}
-	
+
+	if(!empty($_GET['hash']))
+	{
+		$hash = $_GET['hash'];
+		$origin_url = $hash_class->getUrlByHash($hash);
+		if($origin_url)
+		{
+			header("Location: $origin_url");			
+		}
+		else
+		{
+			$smarty->assign("hash_url", false);
+			$smarty->assign("error", "We can`t find that url");
+		}
+	}	
 
 	$smarty->display($display_page);
 ?>
