@@ -38,7 +38,7 @@ class Hash {
 			while($flag == true)
 			{
 				$hash_url = substr(md5($url.$i),0,8);
-				$flag = $this->getUrlByHash($hash);
+				$flag = $this->getUrlByHash($hash_url);
 				$i++;
 			}
 
